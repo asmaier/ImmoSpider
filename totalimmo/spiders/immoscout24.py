@@ -41,9 +41,9 @@ class Immoscout24Spider(scrapy.Spider):
 
                     for attr in result['attributes']:
                         if attr['title'] == "Kaltmiete":
-                            item['rent'] = attr['value'][:-2]  # remove euro sign
+                            item['rent'] = attr['value'][:-2]  # remove units
                         if attr['title'] == u"Wohnfläche":
-                            item['sqm'] = attr['value']
+                            item['sqm'] = attr['value'][:-3] # remove units
                         if attr['title'] == "Zimmer":
                             item['rooms'] = attr['value']     
 
