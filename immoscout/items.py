@@ -8,7 +8,7 @@
 import scrapy
 
 
-class TotalimmoItem(scrapy.Item):
+class ImmoscoutItem(scrapy.Item):
 	# define the fields for your item here like:
     # name = scrapy.Field()
     immo_id = scrapy.Field()

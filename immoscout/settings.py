@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Scrapy settings for totalimmo project
+# Scrapy settings for immoscout project
 #
 # For simplicity, this file contains only settings considered important or
 # commonly used. You can find more settings consulting the documentation:
@@ -9,14 +9,14 @@
 #     http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
 #     http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
 
-BOT_NAME = 'totalimmo'
+BOT_NAME = 'immoscout'
 
-SPIDER_MODULES = ['totalimmo.spiders']
-NEWSPIDER_MODULE = 'totalimmo.spiders'
+SPIDER_MODULES = ['immoscout.spiders']
+NEWSPIDER_MODULE = 'immoscout.spiders'
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'totalimmo (+http://www.yourdomain.com)'
+#USER_AGENT = 'immoscout (+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
@@ -47,13 +47,13 @@ ROBOTSTXT_OBEY = True
 # Enable or disable spider middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
 #SPIDER_MIDDLEWARES = {
-#    'totalimmo.middlewares.TotalimmoSpiderMiddleware': 543,
+#    'immoscout.middlewares.ImmoscoutSpiderMiddleware': 543,
 #}
 
 # Enable or disable downloader middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
 #DOWNLOADER_MIDDLEWARES = {
-#    'totalimmo.middlewares.MyCustomDownloaderMiddleware': 543,
+#    'immoscout.middlewares.MyCustomDownloaderMiddleware': 543,
 #}
 
 # Enable or disable extensions
@@ -65,7 +65,7 @@ ROBOTSTXT_OBEY = True
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 #ITEM_PIPELINES = {
-#    'totalimmo.pipelines.SomePipeline': 300,
+#    'immoscout.pipelines.SomePipeline': 300,
 #}
 
 # Enable and configure the AutoThrottle extension (disabled by default)

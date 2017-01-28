@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import scrapy
 import json
-from totalimmo.items import TotalimmoItem
+from immoscout.items import ImmoscoutItem
 
 
 class Immoscout24Spider(scrapy.Spider):
@@ -29,7 +29,7 @@ class Immoscout24Spider(scrapy.Spider):
                 
                 for result in immo_json["results"]:
 
-                    item = TotalimmoItem()
+                    item = ImmoscoutItem()
 
                     item['immo_id'] = result['id']
                     item['url'] = response.urljoin("/expose/" + str(result['id']))
