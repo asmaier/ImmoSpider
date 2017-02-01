@@ -9,8 +9,8 @@ import scrapy
 
 
 class ImmoscoutItem(scrapy.Item):
-	# define the fields for your item here like:
-    # name = scrapy.Field()
+    # define the fields for your item here like:
+    #  name = scrapy.Field()
     immo_id = scrapy.Field()
     url = scrapy.Field()
     title = scrapy.Field()
@@ -25,6 +25,6 @@ class ImmoscoutItem(scrapy.Item):
     sqm  = scrapy.Field()
     rent = scrapy.Field()
     rooms = scrapy.Field()
-	# time_to = scrapy.Field()  # time to destination using transit or driving
-	
+    time_to = scrapy.Field()  # time to destination using transit or driving
+
 
