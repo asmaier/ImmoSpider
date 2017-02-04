@@ -26,22 +26,23 @@ class GooglemapsPipeline(object):
         next_monday_at_eight = (self._next_monday_eight_oclock(datetime.datetime.now())
                                      - datetime.datetime(1970, 1, 1)).total_seconds()
 
-        directions_result = self.gm_client.directions(item["address"],
+        result = self.gm_client.distance_matrix(item["address"],
                                                       "Brandenburger Tor, Berlin",
                                                       mode="transit",
                                                       departure_time = next_monday_at_eight)
-        #  Pick the fastest way
-        fastest_way = None
-        if len(directions_result) > 0:
-            for result in directions_result:
-                for leg in result["legs"]:
-                    if fastest_way is None:
-                        fastest_way = leg
-                    if fastest_way is not None and fastest_way["duration"]["value"] > leg["duration"]["value"]:
-                        fastest_way = leg
 
-        if fastest_way is None:
+        #  Extract the travel time from the result set
+        travel_time = None
+        if result["rows"]:
+            if result["rows"][0]:
+                elements = result["rows"][0]["elements"]
+                if elements[0]:
+                    duration = elements[0]["duration"]
+                    if duration:
+                        travel_time = duration["value"]
+
+        if travel_time is None:
             return
-        print fastest_way["duration"]["value"]/60.0
-        item["time_to"] = fastest_way["duration"]["value"]/60.0
+        print travel_time/60.0
+        item["time_to"] = travel_time/60.0
         return item
