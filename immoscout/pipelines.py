@@ -10,8 +10,23 @@ import datetime
 
 class GooglemapsPipeline(object):
 
-    def __init__(self, ):
+    def __init__(self):
         self.gm_client = googlemaps.Client("AIzaSyD1tR9ag8ImBLr4BJdr-ZMTP0bFOXPJFUk")
+
+    def _get_destinations(self, spider):
+        destinations = []
+
+        if hasattr(spider, "dest"):
+            mode = getattr(spider, "mode", "driving")
+            destinations.append((spider.dest, mode))
+        if hasattr(spider, "dest2"):
+            mode2 = getattr(spider, "mode2", "driving")
+            destinations.append((spider.dest2, mode2))
+        if hasattr(spider, "dest3"):
+            mode3 = getattr(spider, "mode3", "driving")
+            destinations.append((spider.dest3, mode3))
+
+        return destinations
 
     def _next_monday_eight_oclock(self, now):
         monday = now - datetime.timedelta(days=now.weekday())
@@ -26,23 +41,29 @@ class GooglemapsPipeline(object):
         next_monday_at_eight = (self._next_monday_eight_oclock(datetime.datetime.now())
                                      - datetime.datetime(1970, 1, 1)).total_seconds()
 
-        result = self.gm_client.distance_matrix(item["address"],
-                                                      "Brandenburger Tor, Berlin",
-                                                      mode="transit",
-                                                      departure_time = next_monday_at_eight)
+        destinations = self._get_destinations(spider)
+        travel_times = []
+        for destination, mode in destinations:
+            result = self.gm_client.distance_matrix(item["address"],
+                                                          destination,
+                                                          mode=mode,
+                                                          departure_time = next_monday_at_eight)
+            #  Extract the travel time from the result set
+            travel_time = None
+            if result["rows"]:
+                if result["rows"][0]:
+                    elements = result["rows"][0]["elements"]
+                    if elements[0]:
+                        duration = elements[0]["duration"]
+                        if duration:
+                            travel_time = duration["value"]
 
-        #  Extract the travel time from the result set
-        travel_time = None
-        if result["rows"]:
-            if result["rows"][0]:
-                elements = result["rows"][0]["elements"]
-                if elements[0]:
-                    duration = elements[0]["duration"]
-                    if duration:
-                        travel_time = duration["value"]
+            if travel_time is not None:
+                print destination, mode, travel_time/60.0
+                travel_times.append(travel_time/60.0)
 
-        if travel_time is None:
-            return
-        print travel_time/60.0
-        item["time_to"] = travel_time/60.0
+        item["time_dest"] = travel_times[0] if len(travel_times) > 0 else None
+        item["time_dest2"] = travel_times[1] if len(travel_times) > 1 else None
+        item["time_dest3"] = travel_times[2] if len(travel_times) > 2 else None
+
         return item
