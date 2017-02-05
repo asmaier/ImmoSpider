@@ -10,8 +10,15 @@ import datetime
 
 class GooglemapsPipeline(object):
 
-    def __init__(self):
-        self.gm_client = googlemaps.Client("AIzaSyD1tR9ag8ImBLr4BJdr-ZMTP0bFOXPJFUk")
+    # see https://stackoverflow.com/questions/14075941/how-to-access-scrapy-settings-from-item-pipeline
+    @classmethod
+    def from_crawler(cls, crawler):
+        settings = crawler.settings
+        gm_key = settings.get("GM_KEY")
+        return cls(gm_key)
+
+    def __init__(self, gm_key):
+        self.gm_client = googlemaps.Client(gm_key)
 
     def _get_destinations(self, spider):
         destinations = []
