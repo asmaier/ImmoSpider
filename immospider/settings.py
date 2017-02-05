@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Scrapy settings for immoscout project
+# Scrapy settings for immospider project
 #
 # For simplicity, this file contains only settings considered important or
 # commonly used. You can find more settings consulting the documentation:
@@ -9,14 +9,14 @@
 #     http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
 #     http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
 
-BOT_NAME = 'immoscout'
+BOT_NAME = 'immospider'
 
-SPIDER_MODULES = ['immoscout.spiders']
-NEWSPIDER_MODULE = 'immoscout.spiders'
+SPIDER_MODULES = ['immospider.spiders']
+NEWSPIDER_MODULE = 'immospider.spiders'
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'immoscout (+http://www.yourdomain.com)'
+#USER_AGENT = 'immospider (+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
@@ -47,13 +47,13 @@ ROBOTSTXT_OBEY = True
 # Enable or disable spider middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
 #SPIDER_MIDDLEWARES = {
-#    'immoscout.middlewares.ImmoscoutSpiderMiddleware': 543,
+#    'immospider.middlewares.ImmoscoutSpiderMiddleware': 543,
 #}
 
 # Enable or disable downloader middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
 #DOWNLOADER_MIDDLEWARES = {
-#    'immoscout.middlewares.MyCustomDownloaderMiddleware': 543,
+#    'immospider.middlewares.MyCustomDownloaderMiddleware': 543,
 #}
 
 # Enable or disable extensions
@@ -65,7 +65,7 @@ ROBOTSTXT_OBEY = True
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    'immoscout.pipelines.GooglemapsPipeline': 300,
+    'immospider.pipelines.GooglemapsPipeline': 300,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)

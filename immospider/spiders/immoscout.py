@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 import scrapy
 import json
-from immoscout.items import ImmoscoutItem
+from immospider.items import ImmoscoutItem
 
 
-class Immoscout24Spider(scrapy.Spider):
-    name = "immoscout24"
+class ImmoscoutSpider(scrapy.Spider):
+    name = "immoscout"
     allowed_domains = ["immobilienscout24.de"]
     # start_urls = ['https://www.immobilienscout24.de/Suche/S-2/Wohnung-Miete/Berlin/Berlin']
     # start_urls = ['https://www.immobilienscout24.de/Suche/S-2/Wohnung-Miete/Berlin/Berlin/Lichterfelde-Steglitz_Nikolassee-Zehlendorf_Dahlem-Zehlendorf_Zehlendorf-Zehlendorf/2,50-/60,00-/EURO--800,00/-/-/']
 
-    # The immoscout24 search results are stored as json inside their javascript. This makes the parsing very easy.
+    # The immoscout search results are stored as json inside their javascript. This makes the parsing very easy.
     # I learned this trick from https://github.com/balzer82/immoscraper/blob/master/immoscraper.ipynb .
     script_xpath = './/script[contains(., "IS24.resultList")]'
     next_xpath = '//div[@id = "pager"]/div/a/@href'
