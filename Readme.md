@@ -23,4 +23,4 @@ The option `-o apartments.csv` specifies the output file. The parameter `-s GM_K
 If you start Immospider with the given parameters here it might run up to 20 minutes, not because the crawler is slow, but because the Google Maps API takes some time to compute the travel time for each of the more than 500 apartments. If that is too slow for you, you should modify your search on Immoscout (and use copy the new url), so that the amount of search results is lower. If your result set is about 50 apartments, Immospider will only need 1-2 minutes to compute all the travel times.  
   
 # Data Science
-How one can analyze the search results and also show them on a map you can see at the jupyter notebook [ImmoAnalyze.ipynb](https://github.com/asmaier/ImmoSpider/blob/master/ImmoAnalyze.ipynb) .
+How one can analyze the search results and also show them on a map you can see at the jupyter notebook [ImmoAnalyze.ipynb](https://nbviewer.jupyter.org/github/asmaier/ImmoSpider/blob/master/ImmoAnalyze.ipynb) .
