@@ -66,7 +66,7 @@ class GooglemapsPipeline(object):
                             travel_time = duration["value"]
 
             if travel_time is not None:
-                print destination, mode, travel_time/60.0
+                print(destination, mode, travel_time/60.0)
                 travel_times.append(travel_time/60.0)
 
         item["time_dest"] = travel_times[0] if len(travel_times) > 0 else None

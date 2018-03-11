@@ -20,7 +20,7 @@ class ImmoscoutSpider(scrapy.Spider):
 
     def parse(self, response):
 
-        print response.url
+        print(response.url)
 
         for line in response.xpath(self.script_xpath).extract_first().split('\n'):
             if line.strip().startswith('model'):
@@ -66,7 +66,7 @@ class ImmoscoutSpider(scrapy.Spider):
                
                     yield item     
 
-    	next_page = response.xpath(self.next_xpath).extract()[-1]
+        next_page = response.xpath(self.next_xpath).extract()[-1]
         if next_page is not None:
             next_page = response.urljoin(next_page)
             yield scrapy.Request(next_page, callback=self.parse)	
