@@ -60,7 +60,7 @@ class GooglemapsPipeline(object):
             if result["rows"]:
                 if result["rows"][0]:
                     elements = result["rows"][0]["elements"]
-                    if elements[0]:
+                    if elements[0] and "duration" in elements[0]:
                         duration = elements[0]["duration"]
                         if duration:
                             travel_time = duration["value"]

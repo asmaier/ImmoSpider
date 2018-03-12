@@ -37,7 +37,10 @@ class ImmoscoutSpider(scrapy.Spider):
                     item['url'] = response.urljoin("/expose/" + str(data['@id']))
                     item['title'] = data['title']
                     address = data['address']
-                    item['address'] = address['street'] + " " + address['houseNumber']
+                    try:
+                        item['address'] = address['street'] + " " + address['houseNumber']
+                    except:
+                        item['address'] = None    
                     item['city'] = address['city']
                     item['zip_code'] = address['postcode']
                     item['district'] = address['quarter']
