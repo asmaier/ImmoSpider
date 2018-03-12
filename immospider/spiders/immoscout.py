@@ -26,15 +26,17 @@ class ImmoscoutSpider(scrapy.Spider):
             if line.strip().startswith('resultListModel'):
                 immo_json = line.strip()
                 immo_json = json.loads(immo_json[17:-1])
-                
-                for result in immo_json["searchResponseModel"]["resultlist.resultlist"]["resultlistEntries"][0]["resultlistEntry"]["resultlist.realEstate"]:
+
+                for result in immo_json["searchResponseModel"]["resultlist.resultlist"]["resultlistEntries"][0]["resultlistEntry"]:
 
                     item = ImmoscoutItem()
 
-                    item['immo_id'] = result['@id']
-                    item['url'] = response.urljoin("/expose/" + str(result['@id']))
-                    item['title'] = result['title']
-                    address = result['address']
+                    data = result["resultlist.realEstate"]
+
+                    item['immo_id'] = data['@id']
+                    item['url'] = response.urljoin("/expose/" + str(data['@id']))
+                    item['title'] = data['title']
+                    address = data['address']
                     item['address'] = address['street'] + " " + address['houseNumber']
                     item['city'] = address['city']
                     item['zip_code'] = address['postcode']
@@ -49,13 +51,13 @@ class ImmoscoutSpider(scrapy.Spider):
                             item['rooms'] = attr['value']     
 
                     try:
-                        contact = result['contactDetails']
+                        contact = data['contactDetails']
                         item['contact_name'] = contact['firstname'] + " " + contact["lastname"]
                     except:
                         item['contact_name'] = None
 
                     try:
-                        item['media_count'] = len(result['galleryAttachments']['attachment'])
+                        item['media_count'] = len(data['galleryAttachments']['attachment'])
                     except:
                         item['media_count'] = 0
 
@@ -69,6 +71,7 @@ class ImmoscoutSpider(scrapy.Spider):
                     yield item     
 
         next_page = response.xpath(self.next_xpath).extract()[-1]
+        print("Scraping next page", next_page)
         if next_page is not None:
             next_page = response.urljoin(next_page)
             yield scrapy.Request(next_page, callback=self.parse)	
