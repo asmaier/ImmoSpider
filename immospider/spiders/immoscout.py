@@ -23,43 +23,45 @@ class ImmoscoutSpider(scrapy.Spider):
         print(response.url)
 
         for line in response.xpath(self.script_xpath).extract_first().split('\n'):
-            if line.strip().startswith('model'):
+            if line.strip().startswith('resultListModel'):
                 immo_json = line.strip()
-                immo_json = json.loads(immo_json[7:-1])
+                immo_json = json.loads(immo_json[17:-1])
                 
-                for result in immo_json["results"]:
+                for result in immo_json["searchResponseModel"]["resultlist.resultlist"]["resultlistEntries"][0]["resultlistEntry"]["resultlist.realEstate"]:
 
                     item = ImmoscoutItem()
 
-                    item['immo_id'] = result['id']
-                    item['url'] = response.urljoin("/expose/" + str(result['id']))
+                    item['immo_id'] = result['@id']
+                    item['url'] = response.urljoin("/expose/" + str(result['@id']))
                     item['title'] = result['title']
-                    item['address'] = result['address']
-                    item['city'] = result['city']
-                    item['zip_code'] = result['zip']
-                    item['district'] = result['district']
+                    address = result['address']
+                    item['address'] = address['street'] + " " + address['houseNumber']
+                    item['city'] = address['city']
+                    item['zip_code'] = address['postcode']
+                    item['district'] = address['quarter']
 
-                    for attr in result['attributes']:
-                        if attr['title'] == "Kaltmiete":
+                    for attr in result['attributes'][0]['attribute']:
+                        if attr['label'] == "Kaltmiete":
                             item['rent'] = attr['value'][:-2]  # remove units
-                        if attr['title'] == u"Wohnfläche":
+                        if attr['label'] == u"Wohnfläche":
                             item['sqm'] = attr['value'][:-3] # remove units
-                        if attr['title'] == "Zimmer":
+                        if attr['label'] == "Zimmer":
                             item['rooms'] = attr['value']     
 
                     try:
-                        item['contact_name'] = result['contactName']
+                        contact = result['contactDetails']
+                        item['contact_name'] = contact['firstname'] + " " + contact["lastname"]
                     except:
                         item['contact_name'] = None
 
                     try:
-                        item['media_count'] = result['mediaCount']
+                        item['media_count'] = len(result['galleryAttachments']['attachment'])
                     except:
                         item['media_count'] = 0
 
                     try:
-                        item['lat'] = result['latitude']
-                        item['lng'] = result['longitude']
+                        item['lat'] = address['wgs84Coordinate']['latitude']
+                        item['lng'] = address['wgs84Coordinate']['longitude']
                     except:
                         item['lat'] = None
                         item['lng'] = None 
