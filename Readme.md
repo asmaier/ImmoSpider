@@ -10,10 +10,10 @@ it is faster and more flexible.
 
 ### Installation
 
-Immospider is using the popular python framework https://scrapy.org/ . To install you need Python 2.7. Then you can 
+Immospider is using the popular python framework https://scrapy.org/ . To install you need Python 3. Then you can 
 clone this repository and install the requirements via
 
-    pip install -r requirements.txt
+    pip3 install -r requirements.txt
    
 This should install scrapy and the googlemaps package for you. To use it you also need an API key for the googlemaps 
 API. You should follow the instructions at https://github.com/googlemaps/google-maps-services-python#api-keys to get 
