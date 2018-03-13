@@ -1,7 +1,7 @@
 # Intro
 Finding a good flat which is near to your work place and is also near to e.g. the kindergarden/school of your kids, your
  favorite park etc. can be very difficult. Unfortunately the existing search engines in Germany for apartments like 
- Immoscout, Immowelt, Immonet don't support computing the travel time for an apartment to some destinations. Here I 
+ Immoscout, Immowelt, Immonet don't support computing the travel time for an apartment to several destinations. Here I 
  want to show you how to use Immospider to do that.
 ## Immospider
 Immospider is a python program that crawls the Immoscout24 website. It is based on ideas from 
@@ -10,13 +10,14 @@ it is faster and more flexible.
 
 ### Installation
 
-Immospider is using the popular python framework https://scrapy.org/ . To install you need Python 3. Then you can 
+Immospider is using the popular python framework https://scrapy.org/ . For installation you need Python 3. Then you can 
 clone this repository and install the requirements via
 
     pip3 install -r requirements.txt
    
-This should install scrapy and the googlemaps package for you. To use it you also need an API key for the googlemaps 
-API. You should follow the instructions at https://github.com/googlemaps/google-maps-services-python#api-keys to get 
+This should install scrapy and the googlemaps package for you. 
+You also need an API key for the googlemaps API, if you want to compute travel times to several destinations.
+You should follow the instructions at https://github.com/googlemaps/google-maps-services-python#api-keys to get 
 your API key.
 
 ### Usage
@@ -44,6 +45,16 @@ but because the Google Maps API takes some time to compute the travel time for e
 If that is too slow for you, you should modify your search on Immoscout (and again copy the new url), so that the 
 amount of search results is lower. If your result set is about 50 apartments, Immospider will only need 1-2 minutes 
 to compute all the travel times. 
+
+### Usage without Googlemaps API key
+If you just want to download search results vom Immoscout, but without computing travel times to destinations you can 
+start Immospider simply without the destination (`-a destX`, `-a modeX`) and without the API key parameter (`-s`) like
+
+    scrapy crawl immoscout -o apartments.csv -a url=https://www.immobilienscout24.de/Suche/S-T/Wohnung-Miete/Berlin/Berlin/-/2,50-/60,00-/EURO--1000,00  -L INFO
+
+Because it doesn't need to access the Googlemaps API it will be much faster and you should be able to scrape all results
+within 30 seconds.
+
   
 # Data Science
 How one can analyze the search results and also show them on a map you can see at the jupyter 

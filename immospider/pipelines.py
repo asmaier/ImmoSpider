@@ -18,7 +18,8 @@ class GooglemapsPipeline(object):
         return cls(gm_key)
 
     def __init__(self, gm_key):
-        self.gm_client = googlemaps.Client(gm_key)
+        if gm_key:
+            self.gm_client = googlemaps.Client(gm_key)
 
     def _get_destinations(self, spider):
         destinations = []
@@ -43,34 +44,34 @@ class GooglemapsPipeline(object):
             return (monday + datetime.timedelta(weeks=1)).replace(hour=8, minute=0, second=0, microsecond=0)
 
     def process_item(self, item, spider):
+        if hasattr(self, "gm_client"):
+            # see https://stackoverflow.com/questions/11743019/convert-python-datetime-to-epoch-with-strftime
+            next_monday_at_eight = (self._next_monday_eight_oclock(datetime.datetime.now())
+                                         - datetime.datetime(1970, 1, 1)).total_seconds()
 
-        # see https://stackoverflow.com/questions/11743019/convert-python-datetime-to-epoch-with-strftime
-        next_monday_at_eight = (self._next_monday_eight_oclock(datetime.datetime.now())
-                                     - datetime.datetime(1970, 1, 1)).total_seconds()
+            destinations = self._get_destinations(spider)
+            travel_times = []
+            for destination, mode in destinations:
+                result = self.gm_client.distance_matrix(item["address"],
+                                                              destination,
+                                                              mode=mode,
+                                                              departure_time = next_monday_at_eight)
+                #  Extract the travel time from the result set
+                travel_time = None
+                if result["rows"]:
+                    if result["rows"][0]:
+                        elements = result["rows"][0]["elements"]
+                        if elements[0] and "duration" in elements[0]:
+                            duration = elements[0]["duration"]
+                            if duration:
+                                travel_time = duration["value"]
 
-        destinations = self._get_destinations(spider)
-        travel_times = []
-        for destination, mode in destinations:
-            result = self.gm_client.distance_matrix(item["address"],
-                                                          destination,
-                                                          mode=mode,
-                                                          departure_time = next_monday_at_eight)
-            #  Extract the travel time from the result set
-            travel_time = None
-            if result["rows"]:
-                if result["rows"][0]:
-                    elements = result["rows"][0]["elements"]
-                    if elements[0] and "duration" in elements[0]:
-                        duration = elements[0]["duration"]
-                        if duration:
-                            travel_time = duration["value"]
+                if travel_time is not None:
+                    print(destination, mode, travel_time/60.0)
+                    travel_times.append(travel_time/60.0)
 
-            if travel_time is not None:
-                print(destination, mode, travel_time/60.0)
-                travel_times.append(travel_time/60.0)
-
-        item["time_dest"] = travel_times[0] if len(travel_times) > 0 else None
-        item["time_dest2"] = travel_times[1] if len(travel_times) > 1 else None
-        item["time_dest3"] = travel_times[2] if len(travel_times) > 2 else None
+            item["time_dest"] = travel_times[0] if len(travel_times) > 0 else None
+            item["time_dest2"] = travel_times[1] if len(travel_times) > 1 else None
+            item["time_dest3"] = travel_times[2] if len(travel_times) > 2 else None
 
         return item
