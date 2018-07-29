@@ -65,9 +65,10 @@ class ImmoscoutSpider(scrapy.Spider):
                         item['media_count'] = 0
 
                     try:
-                        item['lat'] = address['wgs84Coordinate']['latitude']
-                        item['lng'] = address['wgs84Coordinate']['longitude']
-                    except:
+                        item['lat'] = str(address['wgs84Coordinate']['latitude']).replace(".",",")    # use comma as digit separator 
+                        item['lng'] = str(address['wgs84Coordinate']['longitude']).replace(".",",")   
+                    except Exception as e:
+                        print(e)
                         item['lat'] = None
                         item['lng'] = None 
                
