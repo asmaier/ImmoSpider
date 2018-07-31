@@ -11,6 +11,7 @@ pandas = "*"
 scipy = "*"
 matplotlib = "*"
 seaborn = "*"
+tpot = "*"
 
 [dev-packages]
 
