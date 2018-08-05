@@ -45,13 +45,14 @@ class ImmoscoutSpider(scrapy.Spider):
                     item['zip_code'] = address['postcode']
                     item['district'] = address['quarter']
 
-                    for attr in result['attributes'][0]['attribute']:
-                        if attr['label'] == "Kaltmiete":
-                            item['rent'] = attr['value'][:-2]  # remove units
-                        if attr['label'] == u"Wohnfläche":
-                            item['sqm'] = attr['value'][:-3] # remove units
-                        if attr['label'] == "Zimmer":
-                            item['rooms'] = attr['value']     
+                    item["rent"] = data["price"]["value"]
+                    item["extra_costs"] = (data["calculatedPrice"]["value"] - data["price"]["value"])
+                    item["sqm"] = data["livingSpace"]
+                    item["rooms"] = data["numberOfRooms"]
+                    item["kitchen"] = data["builtInKitchen"]
+                    item["balcony"] = data["balcony"]
+                    item["garden"] = data["garden"]
+                    item["private"] = data["privateOffer"]
 
                     try:
                         contact = data['contactDetails']
@@ -65,10 +66,10 @@ class ImmoscoutSpider(scrapy.Spider):
                         item['media_count'] = 0
 
                     try:
-                        item['lat'] = str(address['wgs84Coordinate']['latitude']).replace(".",",")    # use comma as digit separator 
-                        item['lng'] = str(address['wgs84Coordinate']['longitude']).replace(".",",")   
+                        item['lat'] = address['wgs84Coordinate']['latitude']
+                        item['lng'] = address['wgs84Coordinate']['longitude']
                     except Exception as e:
-                        print(e)
+                        # print(e)
                         item['lat'] = None
                         item['lng'] = None 
                
