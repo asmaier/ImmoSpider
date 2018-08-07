@@ -33,6 +33,8 @@ class ImmoscoutSpider(scrapy.Spider):
 
                     data = result["resultlist.realEstate"]
 
+                    # print(data)
+
                     item['immo_id'] = data['@id']
                     item['url'] = response.urljoin("/expose/" + str(data['@id']))
                     item['title'] = data['title']
@@ -46,13 +48,23 @@ class ImmoscoutSpider(scrapy.Spider):
                     item['district'] = address['quarter']
 
                     item["rent"] = data["price"]["value"]
-                    item["extra_costs"] = (data["calculatedPrice"]["value"] - data["price"]["value"])
                     item["sqm"] = data["livingSpace"]
                     item["rooms"] = data["numberOfRooms"]
-                    item["kitchen"] = data["builtInKitchen"]
-                    item["balcony"] = data["balcony"]
-                    item["garden"] = data["garden"]
-                    item["private"] = data["privateOffer"]
+
+                    if "calculatedPrice" in data:
+                        item["extra_costs"] = (data["calculatedPrice"]["value"] - data["price"]["value"])
+                    if "builtInKitchen" in data:
+                        item["kitchen"] = data["builtInKitchen"]
+                    if "balcony" in data:
+                        item["balcony"] = data["balcony"]
+                    if "garden" in data:
+                        item["garden"] = data["garden"]
+                    if "privateOffer" in data:
+                        item["private"] = data["privateOffer"]
+                    if "plotArea" in data:
+                        item["area"] = data["plotArea"]
+                    if "cellar" in data:
+                        item["cellar"] = data["cellar"]       
 
                     try:
                         contact = data['contactDetails']

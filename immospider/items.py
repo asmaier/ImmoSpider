@@ -30,6 +30,8 @@ class ImmoscoutItem(scrapy.Item):
     balcony = scrapy.Field()
     garden = scrapy.Field()
     private = scrapy.Field()
+    area = scrapy.Field()
+    cellar = scrapy.Field()
     time_dest = scrapy.Field()  # time to destination using transit or driving
     time_dest2 = scrapy.Field()
     time_dest3 = scrapy.Field()
