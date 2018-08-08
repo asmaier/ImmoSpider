@@ -12,6 +12,7 @@ scipy = "*"
 matplotlib = "*"
 seaborn = "*"
 tpot = "*"
+googlemaps = "*"
 
 [dev-packages]
 
