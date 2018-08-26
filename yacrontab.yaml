@@ -1,0 +1,11 @@
+defaults:
+  environment:
+    - key: PYTHONIOENCODING
+      value: utf-8
+
+jobs:
+  - name: scrapy
+    command: scrapy crawl immoscout -o apartments.csv -a url=$URL  -L INFO
+    schedule: "*/10 * * * *"
+    captureStdout: true
+

@@ -13,6 +13,7 @@ matplotlib = "*"
 seaborn = "*"
 tpot = "*"
 googlemaps = "*"
+yacron = "*"
 
 [dev-packages]
 

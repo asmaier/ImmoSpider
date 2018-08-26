@@ -14,6 +14,8 @@ BOT_NAME = 'immospider'
 SPIDER_MODULES = ['immospider.spiders']
 NEWSPIDER_MODULE = 'immospider.spiders'
 
+# log output to stdout instead of stderr
+LOG_STDOUT = True
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'immospider (+http://www.yourdomain.com)'
