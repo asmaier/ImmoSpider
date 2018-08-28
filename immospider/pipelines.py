@@ -7,6 +7,24 @@
 
 import googlemaps
 import datetime
+import shelve
+from scrapy.exceptions import DropItem
+
+# see https://doc.scrapy.org/en/latest/topics/item-pipeline.html#duplicates-filter
+class DuplicatesPipeline(object):
+
+    def __init__(self):
+        self.ids_seen = shelve.open("immo_items.db")
+
+    def process_item(self, item, spider):
+        immo_id = item['immo_id']
+
+        if immo_id in self.ids_seen:
+            raise DropItem("Duplicate item found: %s" % item)
+        else:
+            self.ids_seen[immo_id] = item
+            return item
+
 
 class GooglemapsPipeline(object):
 

@@ -67,6 +67,7 @@ ROBOTSTXT_OBEY = True
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
+    'immospider.pipelines.DuplicatesPipeline': 500,
     'immospider.pipelines.GooglemapsPipeline': 300,
 }
 
