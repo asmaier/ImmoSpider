@@ -12,8 +12,8 @@ jobs:
         -s SMTP=${SMTPSERVER}
         -s USER=${USER}
         -s PASS=${PASS}
+        -s LOG_LEVEL=INFO
         -a url=${URL}  
-        -L INFO
-    schedule: "*/1 * * * *"
+    schedule: "*/10 * * * *"
     captureStdout: true
 

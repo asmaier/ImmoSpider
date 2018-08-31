@@ -1,5 +1,10 @@
 import smtplib
+import logging
+from operator import attrgetter
 from scrapy import signals
+
+
+logger = logging.getLogger(__name__)
 
 
 class SendMail(object):
@@ -33,8 +38,8 @@ class SendMail(object):
 
 		if len(self.items) > 0: 
 
-			message = "Hello from Immüspider\r\n"
-			# message+= "\r\n".join([str(item) for item in self.items])				
+			message = "Hi there,\r\n\r\nhere are all new items from Immospider:\r\n"
+			message+= "\r\n".join([str(item["url"]) +" "+ str(item["rent"]) +"€ "+ str(item["title"]) for item in sorted(self.items, key = lambda item: float(item["rent"]), reverse=True)])				
 
 			msg = "\r\n".join([
 				"From: " + self.fromaddr,
@@ -50,7 +55,10 @@ class SendMail(object):
 			server.starttls()
 			server.login(self.user, self.password)
 			server.sendmail(self.fromaddr, self.toaddr, msg.encode("utf8"))
-			server.quit()	
+			server.quit()
+		else:
+			logger.info("No new items found. No email sent.") 
+					
 
 	def item_scraped(self, item, spider):
 		self.items.append(item)
