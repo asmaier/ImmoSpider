@@ -20,7 +20,7 @@ class DuplicatesPipeline(object):
         immo_id = item['immo_id']
 
         if immo_id in self.ids_seen:
-            raise DropItem("Duplicate item found: %s" % item)
+            raise DropItem("Duplicate item found: %s" % item['url'])
         else:
             self.ids_seen[immo_id] = item
             return item

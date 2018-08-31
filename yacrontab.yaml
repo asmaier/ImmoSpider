@@ -5,7 +5,15 @@ defaults:
 
 jobs:
   - name: scrapy
-    command: scrapy crawl immoscout -o apartments_$(date +"%Y%m%dT%H%M%S").csv -a url=$URL  -L INFO
-    schedule: "*/10 * * * *"
+    command: > 
+        scrapy crawl immoscout -o apartments_$(date +"%Y%m%dT%H%M%S").csv 
+        -s FROM=${FROM}
+        -s TO=${TO}
+        -s SMTP=${SMTPSERVER}
+        -s USER=${USER}
+        -s PASS=${PASS}
+        -a url=${URL}  
+        -L INFO
+    schedule: "*/1 * * * *"
     captureStdout: true
 

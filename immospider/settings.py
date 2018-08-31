@@ -60,9 +60,10 @@ ROBOTSTXT_OBEY = True
 
 # Enable or disable extensions
 # See http://scrapy.readthedocs.org/en/latest/topics/extensions.html
-#EXTENSIONS = {
+EXTENSIONS = {
+     'immospider.extensions.SendMail': 100,	
 #    'scrapy.extensions.telnet.TelnetConsole': None,
-#}
+}
 
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
