@@ -14,6 +14,7 @@ seaborn = "*"
 tpot = "*"
 googlemaps = "*"
 yacron = "*"
+sendgrid = "*"
 
 [dev-packages]
 

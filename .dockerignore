@@ -1,4 +1,5 @@
 .git
-.ipynb_checkpoints
+.ipynb_checkpoints/
 apartments.csv
 *.ipynb
+config*

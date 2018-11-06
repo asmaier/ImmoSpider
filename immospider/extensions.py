@@ -1,6 +1,6 @@
-import smtplib
+import sendgrid
+from sendgrid.helpers.mail import *
 import logging
-from operator import attrgetter
 from scrapy import signals
 
 
@@ -9,12 +9,10 @@ logger = logging.getLogger(__name__)
 
 class SendMail(object):
 
-	def __init__(self, fromaddr, to, smtp_server, user, password):
+	def __init__(self, fromaddr, to, sendgrid_key):
 		self.fromaddr = fromaddr
 		self.toaddr = to
-		self.smtp_server = smtp_server
-		self.user = user
-		self.password = password
+		self.sendgrid_key = sendgrid_key
 		self.items = []
 
 	@classmethod
@@ -23,11 +21,9 @@ class SendMail(object):
 		settings = crawler.settings
 		fromaddr = settings.get("FROM")
 		toaddr = settings.get("TO")
-		smtp_server = settings.get("SMTP")
-		user = settings.get("USER")
-		password = settings.get("PASS")
+		sendgrid_key = settings.get("SENDGRID_API_KEY")
         	
-		ext = cls(fromaddr, toaddr, smtp_server, user, password)
+		ext = cls(fromaddr, toaddr, sendgrid_key)
 
 		crawler.signals.connect(ext.spider_closed, signal=signals.spider_closed)
 		crawler.signals.connect(ext.item_scraped, signal=signals.item_scraped)
@@ -38,27 +34,24 @@ class SendMail(object):
 
 		if len(self.items) > 0: 
 
+			sg = sendgrid.SendGridAPIClient(self.sendgrid_key)
+
+			from_email = Email(self.fromaddr)
+			to_email = Email(self.toaddr)
+			subject = "New Items from Immospider"
+
 			message = "Hi there,\r\n\r\nhere are all new items from Immospider:\r\n"
-			message+= "\r\n".join([str(item["url"]) +" "+ str(item["rent"]) +"€ "+ str(item["title"]) for item in sorted(self.items, key = lambda item: float(item["rent"]), reverse=True)])				
+			message += "\r\n".join([str(item["url"]) +" "+ str(item["rent"]) +"€ "+ str(item["title"]) for item in sorted(self.items, key = lambda item: float(item["rent"]), reverse=True)])
+			content = Content("text/plain", message)
 
-			msg = "\r\n".join([
-				"From: " + self.fromaddr,
-				"To: " + self.toaddr,
-				"Subject: New Items from Immospider",
-				message
-				])
-			
-			print(msg)
+			mail = Mail(from_email, subject, to_email, content)
 
-			server = smtplib.SMTP(self.smtp_server)
-			server.ehlo()
-			server.starttls()
-			server.login(self.user, self.password)
-			server.sendmail(self.fromaddr, self.toaddr, msg.encode("utf8"))
-			server.quit()
+			response = sg.client.mail.send.post(request_body=mail.get())
+			logger.info(response.status_code)
+			logger.info(response.body)
+			logger.info(response.headers)
 		else:
 			logger.info("No new items found. No email sent.") 
-					
 
 	def item_scraped(self, item, spider):
 		self.items.append(item)
