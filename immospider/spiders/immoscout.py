@@ -85,10 +85,12 @@ class ImmoscoutSpider(scrapy.Spider):
                         item['lat'] = None
                         item['lng'] = None 
                
-                    yield item     
+                    yield item
 
-        next_page = response.xpath(self.next_xpath).extract()[-1]
-        print("Scraping next page", next_page)
-        if next_page is not None:
-            next_page = response.urljoin(next_page)
-            yield scrapy.Request(next_page, callback=self.parse)	
+        next_page_list = response.xpath(self.next_xpath).extract()
+        if next_page_list:
+            next_page = next_page_list[-1]
+            print("Scraping next page", next_page)
+            if next_page:
+                next_page = response.urljoin(next_page)
+                yield scrapy.Request(next_page, callback=self.parse)
