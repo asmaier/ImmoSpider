@@ -55,8 +55,46 @@ To create the docker container and run it with your configuration do
 This will create a docker container from the `Dockerfile`, install the dependencies
 and Immospider into the container and run it with your configuration. It will scrape
 the Immoscout24 in regular intervals, store the results and will send out an email
-when it detects new results it hasn't seen before. Neat, isn't it?         
+when it detects new results it hasn't seen before. Neat, isn't it?    
 
+### Running at Amazon EC2
+To deploy the docker container in an Amazon EC2 instance you can do the following:
+
+Create an instance with
+    
+    Amazon Linux
+    Image Size 8GB
+    t2.micro  
+    
+Configure it to allow for SSH access from your machine
+
+    security group (ssh-from-my-ip) SSH TCP 22 <your IP>/32 
+    
+Start your instance and login to it with your private key `<your_keyfile>.pem
+
+    $ chmod 400 <your_keyfile>.pem
+    $ ssh -i "<your_keyfile>.pem" ec2-user@ec2-<your_instance_name>.<your_compute_zone>.compute.amazonaws.com
+
+Then install Docker onto your VM instance
+
+    $ sudo yum update -y
+    $ sudo yum install -y docker
+    $ sudo service docker start
+    
+Finally clone this repository, create and run the docker container 
+
+    $ git clone https://github.com/asmaier/ImmoSpider.git
+    $ cd ImmoSpider
+    # don't forget to change your configuration first
+    $ sudo sh run_docker.sh
+    
+See also
+
+- <https://www.ybrikman.com/writing/2015/11/11/running-docker-aws-ground-up/#launching-an-ec2-instance>
+- <https://docker-curriculum.com/#docker-on-aws>
+- <https://techsparx.com/software-development/docker/deploy-images-without-registry.html>    
+
+ 
 ## Computing travel times
 Finding a good flat which is near to your work place and is also near to e.g. the kindergarden/school of your kids, your
  favorite park etc. can be very difficult. Unfortunately the existing search engines in Germany for apartments like 
