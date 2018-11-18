@@ -27,6 +27,8 @@ class ImmoscoutSpider(scrapy.Spider):
                 immo_json = line.strip()
                 immo_json = json.loads(immo_json[17:-1])
 
+                #TODO: On result pages with just a single result resultlistEntry is not a list, but a dictionary.
+                #TODO: So extracting data will fail.
                 for result in immo_json["searchResponseModel"]["resultlist.resultlist"]["resultlistEntries"][0]["resultlistEntry"]:
 
                     item = ImmoscoutItem()

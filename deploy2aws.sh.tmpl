@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+INSTANCE=<your instance>
+KEYFILE=<your keyfile>
+
+ssh -T -i ${KEYFILE} ec2-user@${INSTANCE} <<'ENDSSH'
+echo "These commands will be run on: $( uname -a )"
+echo "They are executed by: $( whoami )"
+# security updates
+sudo yum update -y
+# install newest version from github
+rm -rf Immospider/
+git clone https://github.com/asmaier/ImmoSpider.git
+ENDSSH
+
+# copy config file to ec2 instance
+scp -i ${KEYFILE} config ec2-user@${INSTANCE}:~/ImmoSpider/config
+
+ssh -T -i ${KEYFILE} ec2-user@${INSTANCE} <<'ENDSSH'
+echo "These commands will be run on: $( uname -a )"
+echo "They are executed by: $( whoami )"
+# starting docker service
+sudo yum install -y docker
+sudo service docker start
+# run docker
+cd ImmoSpider
+sudo sh run_docker.sh
+ENDSSH
+
